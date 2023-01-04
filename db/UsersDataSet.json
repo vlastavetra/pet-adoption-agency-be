@@ -1,0 +1,16 @@
+[
+  {
+    "id": "b456ce8a-b167-469d-a450-8285c0101c4b",
+    "email": "vlasta@gmail.com",
+    "password": "$2b$10$cX1aoJsAkP2jro8VmfRbHOtWDqY5j4fIi2ODD6kYtJ.jhZHRuJx0.",
+    "firstname": "Victoria",
+    "lastname": "V",
+    "phone": "123",
+    "favoritePets": [
+      "1", "2"
+    ],
+    "adoptionPets": [
+      "1", "2"
+    ]
+  }
+]

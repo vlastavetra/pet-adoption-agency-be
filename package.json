@@ -1,0 +1,28 @@
+{
+  "name": "fs-pet-adoption-be-vlastavetra",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/israeltechchallenge/fs-pet-adoption-be-vlastavetra.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/israeltechchallenge/fs-pet-adoption-be-vlastavetra/issues"
+  },
+  "homepage": "https://github.com/israeltechchallenge/fs-pet-adoption-be-vlastavetra#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0"
+  }
+}
