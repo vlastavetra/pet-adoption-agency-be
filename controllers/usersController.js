@@ -64,13 +64,12 @@ const loginUser = async (req, res) => {
 const getUserPets = async (req, res) => {
   const userId = req.body.userId
   const user = JSON.parse(allUsers).find(obj => obj.id === userId)
-  const favoritesList = user.favoritePets
-  const fp = []
-  favoritesList.forEach(element => {
-    const id = element
-    fp.push(JSON.parse(allPets).find(obj => obj.id === id))
+  const array = []
+  user.userPets.forEach(element => {
+    const obj = JSON.parse(allPets).find(obj => obj.id === element.id);
+    array.push({...obj, list: element.list})
   })
-  res.status(200).send(fp)
+  res.status(200).send(array)
 }
 
 module.exports = {createUser, loginUser, getUserPets}

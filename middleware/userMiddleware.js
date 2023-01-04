@@ -1,12 +1,12 @@
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
-require("dotenv").config()
-const {getUserByEmailModel} = require("../models/usersModels")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const { getUserByEmailModel } = require("../models/usersModels");
 
 const passwordsMatch = (req, res, next) => {
-  const { password, repassword } = req.body
+  const { password, repassword } = req.body;
   if (password !== repassword) {
-    res.status(400).send("Password dont match")
+    res.status(400).send("Password dont match");
     return;
   }
 
@@ -14,19 +14,19 @@ const passwordsMatch = (req, res, next) => {
 };
 
 const isNewUser = async (req, res, next) => {
-  const user = await getUserByEmailModel(req.body.email)
+  const user = await getUserByEmailModel(req.body.email);
   if (user) {
-    res.status(400).send("User already exists")
+    res.status(400).send("User already exists");
     return;
   }
   next();
 };
 
 const hashPwd = (req, res, next) => {
-  const saltRounds = 10
+  const saltRounds = 10;
   bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
     if (err) {
-      res.status(500).send(err)
+      res.status(500).send(err);
       return;
     }
 
@@ -36,9 +36,9 @@ const hashPwd = (req, res, next) => {
 };
 
 const doesUserExist = async (req, res, next) => {
-  const user = await getUserByEmailModel(req.body.email)
+  const user = await getUserByEmailModel(req.body.email);
   if (!user) {
-    res.status(400).send("User with this email does not exist")
+    res.status(400).send("User with this email does not exist");
     return;
   }
 
@@ -48,21 +48,39 @@ const doesUserExist = async (req, res, next) => {
 
 const isAuth = (req, res, next) => {
   if (!req.headers.authorization) {
-    res.status(401).send("Authorization headers required")
+    res.status(401).send("Authorization headers required");
     return;
   }
-  const token = req.headers.authorization.replace("Bearer ", "")
+  const token = req.headers.authorization.replace("Bearer ", "");
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      res.status(401).send("Unauthorized")
+      res.status(401).send("Unauthorized");
       return;
     }
 
     if (decoded) {
       req.body.userId = decoded.id;
-      next()
+      next();
     }
   });
 };
 
-module.exports = { passwordsMatch, isNewUser, hashPwd, doesUserExist, isAuth }
+const getUserId = (req, res, next) => {
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.replace("Bearer ", "");
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        res.status(401).send("Unauthorized");
+        return;
+      }
+
+      if (decoded) {
+        req.body.userId = decoded.id;
+        next();
+      }
+    });
+    return;
+  }
+};
+
+module.exports = { passwordsMatch, isNewUser, hashPwd, doesUserExist, isAuth, getUserId};
