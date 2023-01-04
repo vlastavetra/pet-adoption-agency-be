@@ -1,11 +1,13 @@
 const fs = require("fs")
 const path = require("path")
 const pathToUserDb = path.resolve(__dirname, "../db/UsersDataSet.json")
+const pathToPetsDb = path.resolve(__dirname, "../db/PetsDataSet.json")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 const allUsers = fs.readFileSync(pathToUserDb)
+const allPets = fs.readFileSync(pathToPetsDb)
 
 const createUser = async (req, res) => {
   const {email, password, firsname, lastname, phone} = req.body
@@ -59,13 +61,16 @@ const loginUser = async (req, res) => {
   // extract passwords compare logic to middleware
 };
 
-//const getUserPets = async (req, res) => {
-//  const {id: userId} = req.params;
-//  const user = JSON.parse(allUsers).find(obj => obj.id === userId)
-//  const data = {
-//    "favoritePets": user.favoritePets
-//  }
-//  res.status(200).send(data)
-//}
+const getUserPets = async (req, res) => {
+  const userId = req.body.userId
+  const user = JSON.parse(allUsers).find(obj => obj.id === userId)
+  const favoritesList = user.favoritePets
+  const fp = []
+  favoritesList.forEach(element => {
+    const id = element
+    fp.push(JSON.parse(allPets).find(obj => obj.id === id))
+  })
+  res.status(200).send(fp)
+}
 
-module.exports = {createUser, loginUser}
+module.exports = {createUser, loginUser, getUserPets}

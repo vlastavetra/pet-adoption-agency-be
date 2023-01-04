@@ -8,7 +8,7 @@ const router = express.Router();
 router.route("/signup").post(passwordsMatch, isNewUser, hashPwd, createUser)
 router.route("/login").post(doesUserExist, loginUser)
 //router.route("/user/:id").get(getUserData)//.patch(updateUser) // add isAuth
-//router.route("/user/:id/pets").get(getUserPets) // add isAuth
+router.route("/user/pets").get(isAuth, getUserPets)
 
 //router.route("/users").get(authenticateUser, isAdmin, getAllUsers)
 
