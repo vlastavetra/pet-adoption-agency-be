@@ -48,39 +48,35 @@ const doesUserExist = async (req, res, next) => {
 
 const isAuth = (req, res, next) => {
   if (!req.headers.authorization) {
-    res.status(401).send("Authorization headers required");
+    res.status(401).send("Authorization headers required")
     return;
   }
-  const token = req.headers.authorization.replace("Bearer ", "");
+  const token = req.headers.authorization.replace("Bearer ", "")
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      res.status(401).send("Unauthorized");
-      return;
+      res.status(401).send("Unauthorized")
+      return
     }
 
     if (decoded) {
       req.body.userId = decoded.id;
-      next();
+      next()
     }
-  });
+  })
 };
 
 const getUserId = (req, res, next) => {
   if (req.headers.authorization) {
-    const token = req.headers.authorization.replace("Bearer ", "");
+    const token = req.headers.authorization.replace("Bearer ", "")
     jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
-      if (err) {
-        res.status(401).send("Unauthorized");
-        return;
-      }
-
       if (decoded) {
-        req.body.userId = decoded.id;
-        next();
+        req.body.userId = decoded.id
+        next()
       }
-    });
-    return;
+      return
+    })
   }
+  return next()
 };
 
 module.exports = { passwordsMatch, isNewUser, hashPwd, doesUserExist, isAuth, getUserId};
