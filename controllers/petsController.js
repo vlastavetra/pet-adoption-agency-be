@@ -5,17 +5,30 @@ const {updateUserPets, deleteUserPets} = require("../models/usersModels");
 
 const allPets = fs.readFileSync(pathToPetsDb)
 
+const filterArray = (arr, filters) => {
+  const filtredByType = filters.type ? arr.filter(obj => obj.type === filters.type) : arr
+  const filterByStatus = filters.status ? filtredByType.filter(obj => obj.adoptionStatus === filters.status) : filtredByType
+  const filterByHeight = filters.height ? filterByStatus.filter(obj => obj.height === (filters.height * 1)) : filterByStatus
+  const filterByWeight = filters.weight ? filterByHeight.filter(obj => obj.weight === (filters.weight * 1)) : filterByHeight
+  const filterByName = filters.petName ? filterByWeight.filter(obj => obj.petName === filters.petName) : filterByWeight
+  return filterByName
+}
+
 const getAllPets = async (req, res) => {
-  // search!
-  res.status(200).send(JSON.parse(allPets))
+  const {search} = req.query
+  const arr = search.split("/").map(str => str.split('-'))
+  const filters = Object.fromEntries(arr)
+  const filtredArr = filterArray(JSON.parse(allPets), filters)
+
+  res.status(200).send(filtredArr)
 }
 
 const getPet = async (req, res) => {
   const {id: petId} = req.params
   const userId = req.body.userId
   const obj = JSON.parse(allPets).find(obj => obj.id === petId)
-  const isAdoptedByUser = obj.adoptedByUser === userId
-  const isSavedByUser = obj.savedByUsers?.includes(userId)
+  const isAdoptedByUser = obj?.adoptedByUser === userId
+  const isSavedByUser = obj?.savedByUsers?.includes(userId)
   const pet = {...obj, adoptedByUser: isAdoptedByUser, savedByUser: isSavedByUser}
   res.status(200).send(pet)
 }
