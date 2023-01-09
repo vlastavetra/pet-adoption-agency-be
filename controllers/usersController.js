@@ -42,7 +42,7 @@ const createUser = async (req, res) => {
 //}
 
 const loginUser = async (req, res) => {
-  const { user, password} = req.body
+  const { user, password, isAdmin} = req.body
   try {
     bcrypt.compare(password, user.password, (err, result) => {
       if (err) {
@@ -50,8 +50,8 @@ const loginUser = async (req, res) => {
       } else if (!result) {
         res.status(400).send("Password don't match")
       } else {
-        const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: '1h' })
-        res.send({ token: token, firstname: user.firstname, lastname: user.lastname })
+        const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: '24h' })
+        res.send({ token: token, firstname: user.firstname, lastname: user.lastname, isAdmin: isAdmin })
       }
     })
   } catch (err) {

@@ -1,50 +1,50 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const { getUserByEmailModel } = require("../models/usersModels");
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
+const { getUserByEmailModel, getUserByIdModel } = require("../models/usersModels");
 
 const passwordsMatch = (req, res, next) => {
-  const { password, repassword } = req.body;
+  const { password, repassword } = req.body
   if (password !== repassword) {
-    res.status(400).send("Password dont match");
-    return;
+    res.status(400).send("Password dont match")
+    return
   }
 
-  next();
+  next()
 };
 
 const isNewUser = async (req, res, next) => {
-  const user = await getUserByEmailModel(req.body.email);
+  const user = await getUserByEmailModel(req.body.email)
   if (user) {
-    res.status(400).send("User already exists");
-    return;
+    res.status(400).send("User already exists")
+    return
   }
-  next();
-};
+  next()
+}
 
 const hashPwd = (req, res, next) => {
-  const saltRounds = 10;
+  const saltRounds = 10
   bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
     if (err) {
-      res.status(500).send(err);
-      return;
+      res.status(500).send(err)
+      return
     }
 
-    req.body.password = hash;
-    next();
-  });
-};
+    req.body.password = hash
+    next()
+  })
+}
 
 const doesUserExist = async (req, res, next) => {
-  const user = await getUserByEmailModel(req.body.email);
+  const user = await getUserByEmailModel(req.body.email)
   if (!user) {
-    res.status(400).send("User with this email does not exist");
-    return;
+    res.status(400).send("User with this email does not exist")
+    return
   }
 
-  req.body.user = user;
-  next();
-};
+  req.body.user = user
+  next()
+}
 
 const isAuth = (req, res, next) => {
   if (!req.headers.authorization) {
@@ -63,7 +63,20 @@ const isAuth = (req, res, next) => {
       next()
     }
   })
-};
+}
+
+const isAdmin = async (req, res, next) => {
+  const user = await (req.body.userId ? getUserByIdModel(req.body.userId) : getUserByEmailModel(req.body.email))
+
+  if (!user.isAdmin) {
+    console.log(user)
+    res.status(403).send("Forbidden");
+    return
+  } else {
+    req.body.isAdmin = true
+    return next()
+  }
+}
 
 const getUserId = (req, res, next) => {
   if (req.headers.authorization) {
@@ -77,6 +90,6 @@ const getUserId = (req, res, next) => {
     })
   }
   return next()
-};
+}
 
-module.exports = { passwordsMatch, isNewUser, hashPwd, doesUserExist, isAuth, getUserId};
+module.exports = { passwordsMatch, isNewUser, hashPwd, doesUserExist, isAuth, isAdmin, getUserId};

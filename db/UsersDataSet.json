@@ -1,1 +1,25 @@
-[{"id":"b456ce8a-b167-469d-a450-8285c0101c4b","email":"vlasta@gmail.com","password":"$2b$10$cX1aoJsAkP2jro8VmfRbHOtWDqY5j4fIi2ODD6kYtJ.jhZHRuJx0.","firstname":"Victoria","lastname":"V","phone":"123","isAdmin":false,"userPets":[{"id":"3","list":"adopted"},{"id":"2","list":"saved"},{"id":"2","list":"adopted"}]}]
+[
+  {
+    "id": "b456ce8a-b167-469d-a450-8285c0101c4b",
+    "email": "vlasta@gmail.com",
+    "password": "$2b$10$cX1aoJsAkP2jro8VmfRbHOtWDqY5j4fIi2ODD6kYtJ.jhZHRuJx0.",
+    "firstname": "Victoria",
+    "lastname": "V",
+    "phone": "123",
+    "isAdmin": true,
+    "userPets": [
+      {
+        "id": "3",
+        "list": "adopted"
+      },
+      {
+        "id": "2",
+        "list": "saved"
+      },
+      {
+        "id": "2",
+        "list": "adopted"
+      }
+    ]
+  }
+]
