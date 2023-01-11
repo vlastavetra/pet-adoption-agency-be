@@ -93,7 +93,7 @@ const adoptPet = async (req, res) => {
   newArr.push({...obj, "adoptedByUser": `${userId}`, "adoptionStatus": true})
   updateUserPets(userId, petId, "adopted")
   fs.writeFileSync(pathToPetsDb, JSON.stringify(newArr))
-  res.status(200).send({...obj, "adoptedByUser": `${userId}`, "adoptionStatus": true})
+  res.status(200).send({...obj, "adoptedByUser": `${userId}`, "adoptionStatus": "Adopted"})
 }
 
 const returnPet = async (req, res) => {
@@ -105,7 +105,7 @@ const returnPet = async (req, res) => {
   newArr.push({...obj, "adoptedByUser": "", "adoptionStatus": false})
   deleteUserPets(userId, petId, "adopted")
   fs.writeFileSync(pathToPetsDb, JSON.stringify(newArr))
-  res.status(200).send({...obj, "adoptedByUser": "", "adoptionStatus": false})
+  res.status(200).send({...obj, "adoptedByUser": "", "adoptionStatus": "Fostered"})
 }
 
 const savePet = async (req, res) => {

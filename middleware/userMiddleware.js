@@ -14,6 +14,7 @@ const passwordsMatch = (req, res, next) => {
 };
 
 const isNewUser = async (req, res, next) => {
+  console.log(req.body.email)
   const user = await getUserByEmailModel(req.body.email)
   if (user) {
     res.status(400).send("User already exists")
