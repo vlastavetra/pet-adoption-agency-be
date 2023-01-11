@@ -18,7 +18,9 @@ const createUser = async (req, res) => {
       password: password,
       firsname: firsname,
       lastname: lastname,
-      phone: phone
+      phone: phone,
+      isAdmin: false,
+      userPets: []
     }
     const jsonData = JSON.parse(allUsers)
     const newArr = [...jsonData, obj]
@@ -29,17 +31,43 @@ const createUser = async (req, res) => {
   } 
 }
 
-//const getUserData = async (req, res) => {
-//  const {id: userId} = req.params;
-//  const user = JSON.parse(allUsers).find(obj => obj.id === userId)
-//  const data = {
-//    "email": user.email,
-//    "firstname": user.firstname,
-//    "lastname": user. lastname,
-//    "phone": user. phone
-//  }
-//  res.status(200).send(data)
-//}
+const getUserData = async (req, res) => {
+  const userId = req.body.userId
+  const user = JSON.parse(allUsers).find(obj => obj.id === userId)
+  const data = {
+    "email": user.email,
+    "firstname": user.firstname,
+    "lastname": user. lastname,
+    "phone": user. phone
+  }
+  res.status(200).send(data)
+}
+
+const getFullUserData = async (req, res) => {
+  const userId = req.body.userId
+  const user = JSON.parse(allUsers).find(obj => obj.id === userId)
+  res.status(200).send(user)
+}
+
+const updateUser = async (req, res) => {
+  const {email, password, firstname, lastname, phone, userId} = req.body
+
+  const jsonData = JSON.parse(allUsers)
+  const newArr = jsonData.map(obj => {
+    if (obj.id === userId) {
+      obj.email = email ? email : obj.email
+      obj.password = password ? password : obj.password
+      obj.firstname = firstname ? firstname : obj.firstname
+      obj.lastname = lastname ? lastname : obj.lastname
+      obj.phone = phone ? phone : obj.phone
+      return obj
+    }
+  
+    return obj;
+  })
+  fs.writeFileSync(pathToUserDb, JSON.stringify(newArr))
+  res.status(200).send("Updated")
+}
 
 const loginUser = async (req, res) => {
   const { user, password, isAdmin} = req.body
@@ -51,7 +79,7 @@ const loginUser = async (req, res) => {
         res.status(400).send("Password don't match")
       } else {
         const token = jwt.sign({ id: user.id }, process.env.TOKEN_SECRET, { expiresIn: '24h' })
-        res.send({ token: token, firstname: user.firstname, lastname: user.lastname, isAdmin: isAdmin })
+        res.send({ token: token, firstname: user.firstname, lastname: user.lastname, id: user.id, isAdmin: isAdmin })
       }
     })
   } catch (err) {
@@ -72,4 +100,15 @@ const getUserPets = async (req, res) => {
   res.status(200).send(array)
 }
 
-module.exports = {createUser, loginUser, getUserPets}
+const getAllUsers = async (req, res) => {
+  const jsonData = JSON.parse(allUsers)
+  const newArr = jsonData.map(obj => {
+    delete obj["password"]
+    delete obj["isAdmin"]
+    delete obj["userPets"]
+    return obj
+  })
+  res.status(200).send(newArr)
+}
+
+module.exports = {createUser, loginUser, getUserPets, getUserData, getFullUserData, updateUser, getAllUsers}
