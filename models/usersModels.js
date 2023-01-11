@@ -4,6 +4,11 @@ const pathToUserDb = path.resolve(__dirname, "../db/UsersDataSet.json")
 
 const allUsers = fs.readFileSync(pathToUserDb)
 
+const getUserByIdModel = async (id) => {
+  const jsonData = JSON.parse(allUsers)
+  return jsonData.find(obj => obj.id === id)
+}
+
 const getUserByEmailModel = async (email) => {
   const jsonData = JSON.parse(allUsers)
   return jsonData.find(obj => obj.email === email)
@@ -27,4 +32,4 @@ const deleteUserPets = async (userId, petId, action) => {
   fs.writeFileSync(pathToUserDb, JSON.stringify(filtredArr))
 }
 
-module.exports = {getUserByEmailModel, updateUserPets, deleteUserPets};
+module.exports = {getUserByEmailModel, getUserByIdModel, updateUserPets, deleteUserPets};

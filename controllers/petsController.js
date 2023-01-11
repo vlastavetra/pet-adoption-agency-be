@@ -34,13 +34,14 @@ const getPet = async (req, res) => {
 }
 
 const createPet = async (req, res) => {
-  const {type, name, status, img, height, weight, color, hypoallergenic, bio, breed, dietery} = req.body
+  const {type, name, status, picture, height, weight, color, hypoallergenic, bio, breed, dietery, adoptionStatus} = req.body
   const obj = {
     id: crypto.randomUUID(),
     type: type,
     name: name,
     status: status,
-    img: img,
+    picture: picture,
+    adoptionStatus: adoptionStatus,
     height: height,
     weight: weight,
     color: color,
