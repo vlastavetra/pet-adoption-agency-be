@@ -1,1 +1,21 @@
-[{"id":"92cfa6f1-e8d8-413b-8f23-e46e8a658077","email":"vlastavetra@gmail.com","password":"$2b$10$Nodl6EqNsUoNf09rY5Irg.gWmJNnFxCD9hiYd/2/v.T.RZlVpUMaK","isAdmin":true,"firstname":"V","lastname":"V","phone":"0534748839","userPets":[{"id":"93090dcf-0f27-47b8-9b39-cb3a94ba4928","list":"saved"},{"id":"6","list":"adopted"}]}]
+[
+  {
+    "id": "92cfa6f1-e8d8-413b-8f23-e46e8a658077",
+    "email": "vlastavetra@gmail.com",
+    "password": "$2b$10$Nodl6EqNsUoNf09rY5Irg.gWmJNnFxCD9hiYd/2/v.T.RZlVpUMaK",
+    "isAdmin": true,
+    "firstname": "V22",
+    "lastname": "V",
+    "phone": "0534748839",
+    "userPets": [
+      {
+        "id": "93090dcf-0f27-47b8-9b39-cb3a94ba4928",
+        "list": "saved"
+      },
+      {
+        "id": "6",
+        "list": "adopted"
+      }
+    ]
+  }
+]

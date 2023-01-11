@@ -50,24 +50,21 @@ const getFullUserData = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const {email, password, firstname, lastname, phone} = req.body
-  console.log(req.body);
-  const userId = req.body.userId
+  const {email, password, firstname, lastname, phone, userId} = req.body
+
   const jsonData = JSON.parse(allUsers)
   const newArr = jsonData.map(obj => {
     if (obj.id === userId) {
-      return {...obj, 
-        email: email,
-        password: password,
-        firstname: firstname,
-        lastname: lastname,
-        phone: phone
-      };
+      obj.email = email ? email : obj.email
+      obj.password = password ? password : obj.password
+      obj.firstname = firstname ? firstname : obj.firstname
+      obj.lastname = lastname ? lastname : obj.lastname
+      obj.phone = phone ? phone : obj.phone
+      return obj
     }
   
     return obj;
   })
-  console.log(newArr)
   fs.writeFileSync(pathToUserDb, JSON.stringify(newArr))
   res.status(200).send("Updated")
 }
