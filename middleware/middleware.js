@@ -14,7 +14,6 @@ const passwordsMatch = (req, res, next) => {
 };
 
 const isNewUser = async (req, res, next) => {
-  console.log(req.body.email)
   const user = await getUserByEmailModel(req.body.email)
   if (user) {
     res.status(400).send("User already exists")
@@ -24,16 +23,18 @@ const isNewUser = async (req, res, next) => {
 }
 
 const hashPwd = (req, res, next) => {
-  const saltRounds = 10
-  bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-    if (err) {
-      res.status(500).send(err)
-      return
-    }
-
-    req.body.password = hash
-    next()
-  })
+  if (req.body.password) {
+    const saltRounds = 10
+    bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+      if (err) {
+        res.status(500).send(err)
+        return
+      }
+      req.body.password = hash
+      next()
+    })
+  }
+  return next()
 }
 
 const doesUserExist = async (req, res, next) => {
@@ -70,7 +71,6 @@ const isAdmin = async (req, res, next) => {
   const user = await (req.body.userId ? getUserByIdModel(req.body.userId) : getUserByEmailModel(req.body.email))
 
   if (!user.isAdmin) {
-    console.log(user)
     res.status(403).send("Forbidden");
     return
   } else {
@@ -80,17 +80,30 @@ const isAdmin = async (req, res, next) => {
 }
 
 const getUserId = (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.replace("Bearer ", "")
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
-      if (decoded) {
-        req.body.userId = decoded.id
-        next()
-      }
-      return
-    })
+  if (!req.headers.authorization) {
+    return
   }
-  return next()
+  const token = req.headers.authorization.replace("Bearer ", "")
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      res.status(401).send("Unauthorized")
+      return
+    }
+
+    if (decoded) {
+      req.body.userId = decoded.id;
+      next()
+    }
+  })
 }
 
-module.exports = { passwordsMatch, isNewUser, hashPwd, doesUserExist, isAuth, isAdmin, getUserId};
+const checkUserPets = async (req, res, next) => {
+  const { userId } = req.body
+  const { id } = req.params
+  const user = await getUserByIdModel(userId)
+  req.body.isSavedPet = user.savedPets.includes(id)
+  req.body.isOwnedPets = user.ownedPets.includes(id)
+  next()
+}
+
+module.exports = { passwordsMatch, isNewUser, hashPwd, doesUserExist, isAuth, isAdmin, getUserId, checkUserPets}

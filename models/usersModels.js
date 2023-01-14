@@ -1,35 +1,72 @@
-const fs = require("fs")
-const path = require("path")
-const pathToUserDb = path.resolve(__dirname, "../db/UsersDataSet.json")
+const mongoose = require("mongoose");
 
-const allUsers = fs.readFileSync(pathToUserDb)
+const UserSchema = new mongoose.Schema({
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  isAdmin: { type: Boolean, default: false },
+  phone: { type: Number, required: true },
+  savedPets: [{ type: String, required: false }],
+  ownedPets: [{ type: String, required: false }],
+});
 
-const getUserByIdModel = async (id) => {
-  const jsonData = JSON.parse(allUsers)
-  return jsonData.find(obj => obj.id === id)
+const User = mongoose.model("User", UserSchema);
+
+async function getUserByEmailModel(email) {
+  try {
+    const user = await User.findOne({ email: email });
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-const getUserByEmailModel = async (email) => {
-  const jsonData = JSON.parse(allUsers)
-  return jsonData.find(obj => obj.email === email)
+async function getUserByIdModel(id) {
+  try {
+    const user = await User.findOne({ _id: id });
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-const updateUserPets = async (userId, petId, action) => {
-  const arr = JSON.parse(allUsers)
-  const user = arr.find(obj => obj.id === userId)
-  const filtredArr = arr.filter(obj => obj.id !== userId)
-  user.userPets.push({"id": petId, "list": action})
-  filtredArr.push(user)
-  fs.writeFileSync(pathToUserDb, JSON.stringify(filtredArr))
+async function addUserModel(obj) {
+  try {
+    const user = await User.create(obj);
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-const deleteUserPets = async (userId, petId, action) => {
-  const arr = JSON.parse(allUsers)
-  const user = arr.find(obj => obj.id === userId)
-  const filtredArr = arr.filter(obj => obj.id !== userId)
-  const updatedUserPets = user.userPets.filter(obj => obj.id !== petId && obj.list !== action)
-  filtredArr.push({...user, "userPets": updatedUserPets})
-  fs.writeFileSync(pathToUserDb, JSON.stringify(filtredArr))
+async function updateUserModel(obj, id) {
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: obj.userId ? obj.userId : id },
+      obj,
+      { new: true }
+    );
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-module.exports = {getUserByEmailModel, getUserByIdModel, updateUserPets, deleteUserPets};
+async function getUsersModel() {
+  try {
+    const users = await User.find(obj);
+    return users;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+module.exports = {
+  User,
+  getUserByEmailModel,
+  getUserByIdModel,
+  addUserModel,
+  updateUserModel,
+  getUsersModel,
+};
