@@ -12,7 +12,7 @@ require("dotenv").config();
 const createUser = async (req, res) => {
   try {
     const user = await addUserModel(req.body);
-    res.status(200).send({ userId: user._id, ok: true });
+    res.status(200).send("Created");
   } catch (err) {
     res.status(500).send(err);
   }

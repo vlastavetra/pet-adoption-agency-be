@@ -1,6 +1,8 @@
 const express = require("express");
 const {
   passwordsMatch,
+  validateUserData,
+  validateUserLoginData,
   isNewUser,
   hashPwd,
   doesUserExist,
@@ -19,8 +21,8 @@ const {
 
 const router = express.Router();
 
-router.route("/signup").post(passwordsMatch, isNewUser, hashPwd, createUser)
-router.route("/login").post(doesUserExist, loginUser)
+router.route("/signup").post(validateUserData, passwordsMatch, isNewUser, hashPwd, createUser)
+router.route("/login").post(validateUserLoginData, doesUserExist, loginUser)
 router.route("/").get(isAuth, isAdmin, getAllUsers)
 router.route("/pets").get(isAuth, getMyPets)
 router.route("/:id").get(isAuth, getUserData).patch(isAuth, hashPwd, updateUser)

@@ -4,6 +4,7 @@ const {
   isAuth,
   getUserId,
   checkUserPets,
+  validatePetData,
 } = require("../middleware/middleware.js");
 const {
   createPet,
@@ -18,7 +19,7 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAllPets).post(isAuth, isAdmin, createPet)
+router.route("/").get(getAllPets).post(validatePetData, isAuth, isAdmin, createPet)
 router.route("/:id").get(getUserId, checkUserPets, getPet).patch(isAuth, isAdmin, updatePet)
 router.route("/:id/adopt").patch(isAuth, adoptPet)
 router.route("/:id/return").patch(isAuth, returnPet)
