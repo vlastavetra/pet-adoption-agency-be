@@ -46,14 +46,14 @@ async function updatePetModel(id, obj) {
 }
 
 async function getPetsModel(arr) {
-  const { type, name, status, height, weight } = arr;
+  const { type, name, adoptionStatus, height, weight } = arr;
   const obj = {};
 
   if (type) {
     obj.type = type;
   }
-  if (status) {
-    obj.status = status;
+  if (adoptionStatus) {
+    obj.adoptionStatus = adoptionStatus;
   }
   if (height) {
     obj.height = height;

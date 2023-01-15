@@ -6,11 +6,9 @@ const {
 } = require("../models/petsModels");
 const { updateUserModel } = require("../models/usersModels");
 
-const getAllPets = async (req, res, next) => {
-  const { search } = req.query;
-  const arr = search.split("/").map((str) => str.split("-"));
+const getAllPets = async (req, res) => {
   try {
-    const allPets = await getPetsModel(arr);
+    const allPets = await getPetsModel(req.query);
     res.status(200).send(allPets);
   } catch (err) {
     res.status(500).send(err);
