@@ -77,10 +77,9 @@ const returnPet = async (req, res) => {
 const savePet = async (req, res) => {
   const { id } = req.params;
   try {
-    const pet = updatePetModel(id, { adoptionStatus: "Adopted" });
-    updateUserModel({ $push: { savedPets: id } }, req.body.userId);
-    if (pet) {
-      res.status(200).send("Adopted");
+    const user = updateUserModel({ $push: { savedPets: id } }, req.body.userId);
+    if (user) {
+      res.status(200).send("Saved");
     }
   } catch (err) {
     res.status(500).send(err);
@@ -90,10 +89,9 @@ const savePet = async (req, res) => {
 const unSavePet = async (req, res) => {
   const { id } = req.params;
   try {
-    const pet = updatePetModel(id, { adoptionStatus: "Adopted" });
-    updateUserModel({ $pull: { savedPets: id } }, req.body.userId);
-    if (pet) {
-      res.status(200).send("Adopted");
+    const user = updateUserModel({ $pull: { savedPets: id } }, req.body.userId);
+    if (user) {
+      res.status(200).send("Unsaved");
     }
   } catch (err) {
     res.status(500).send(err);

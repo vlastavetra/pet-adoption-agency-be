@@ -1,4 +1,5 @@
 const express = require("express");
+const { upload } = require("../middleware/imagesMiddleware");
 const {
   isAdmin,
   isAuth,
@@ -19,11 +20,11 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAllPets).post(validatePetData, isAuth, isAdmin, createPet)
-router.route("/:id").get(getUserId, checkUserPets, getPet).patch(isAuth, isAdmin, updatePet)
-router.route("/:id/adopt").patch(isAuth, adoptPet)
-router.route("/:id/return").patch(isAuth, returnPet)
-router.route("/:id/save").patch(isAuth, savePet)
-router.route("/:id/unsave").patch(isAuth, unSavePet)
+router.route("/").get(getAllPets).post(isAuth, upload.single("picture"), isAuth, validatePetData, isAdmin, createPet);
+router.route("/:id").get(getUserId, checkUserPets, getPet).patch(isAuth, upload.single("picture"), isAuth, validatePetData, isAdmin, updatePet);
+router.route("/:id/adopt").patch(isAuth, adoptPet);
+router.route("/:id/return").patch(isAuth, returnPet);
+router.route("/:id/save").patch(isAuth, savePet);
+router.route("/:id/unsave").patch(isAuth, unSavePet);
 
-module.exports = router
+module.exports = router;

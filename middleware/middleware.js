@@ -35,8 +35,13 @@ const validateUserLoginData = async (req, res, next) => {
 };
 
 const validatePetData = async (req, res, next) => {
-  const { name, type, adoptionStatus, height, weight, color, hypoallergnic, breed } = req.body;
-  if (!name || !type || !adoptionStatus || !height || !weight || !color || !hypoallergnic || !breed) {
+  const { name, type, adoptionStatus, height, weight, color, hypoallergenic, breed } = req.body;
+
+  if (req.file?.path) {
+    req.body.picture = req.file.path
+  };
+  
+  if (!name || !type || !adoptionStatus || !height || !weight || !color || !hypoallergenic || !breed ) {
     res.status(400).send("Required provide all values");
     return;
   }
