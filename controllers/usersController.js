@@ -36,11 +36,15 @@ const getUserData = async (req, res) => {
 };
 
 const getFullUserData = async (req, res) => {
-  const userId = req.body.userId;
+  const {id} = req.params;
 
   try {
-    const user = await getUserByIdModel(userId);
-    res.status(200).send(user);
+    const user = await getUserByIdModel(id);
+    delete user["password"];
+    const savedPets = await getUserPets({ _id: { $in: user.savedPets } });
+    const ownedPets = await getUserPets({ _id: { $in: user.ownedPets } });
+    const obj = {...user, savedPets, ownedPets};
+    res.status(200).send(obj);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -105,8 +109,8 @@ const getAllUsers = async (req, res) => {
     const allUsers = await getUsersModel();
     const newArr = allUsers.map((obj) => {
       delete obj["password"];
-      delete obj["isAdmin"];
-      delete obj["userPets"];
+      delete obj["savedPets"];
+      delete obj["ownedPets"];
       return obj;
     });
     res.status(200).send(newArr);

@@ -55,7 +55,7 @@ async function updateUserModel(obj, id) {
 
 async function getUsersModel() {
   try {
-    const users = await User.find(obj);
+    const users = await User.find();
     return users;
   } catch (err) {
     console.log(err);
