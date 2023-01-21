@@ -69,6 +69,7 @@ const hashPwd = (req, res, next) => {
       next();
     });
   }
+  return next();
 };
 
 const doesUserExist = async (req, res, next) => {
