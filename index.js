@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
-app.use(cors({ origin: ['http://localhost:3000'], credentials: true }));
+app.use(cors({ origin: ['http://localhost:3000', 'pet-adoption-agency-server-jxie8yay7-vlastavetra.vercel.app'], credentials: true }));
 
 app.use("/user", usersRoutes);
 app.use("/pet", petsRoutes);
