@@ -1,6 +1,7 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
+dotenv.config();
 const usersRoutes = require("./routes/usersRoutes.js");
 const petsRoutes = require("./routes/petsRoutes.js");
 const mongoose = require("mongoose");
@@ -24,8 +25,7 @@ app.use((err, req, res, next) => {
 
 async function init() {
   const connection = await mongoose
-    .set("strictQuery", true)
-    .connect(process.env.MONGO_URI, { 
+    .connect("mongodb+srv://admin:v7tPMlIQprKZ7PDp@petadoptioncluster.dfhv5c8.mongodb.net/?retryWrites=true&w=majority", { 
       dbName: "adoptionAgencyDb",
       useNewUrlParser: true,
       useUnifiedTopology: true
