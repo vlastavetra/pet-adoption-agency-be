@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
 async function init() {
   const connection = await mongoose
     .set("strictQuery", true)
-    .connect("mongodb+srv://admin:v7tPMlIQprKZ7PDp@petadoptioncluster.dfhv5c8.mongodb.net/?retryWrites=true&w=majority", { 
+    .connect(process.env.MONGODB_URI, { 
       dbName: "adoptionAgencyDb",
       useNewUrlParser: true,
       useUnifiedTopology: true
