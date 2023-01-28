@@ -24,8 +24,12 @@ app.use((err, req, res, next) => {
 
 async function init() {
   const connection = await mongoose
-    .set("strictQuery", false)
-    .connect(process.env.MONGO_URI, { dbName: "adoptionAgencyDb" });
+    .set("strictQuery", true)
+    .connect(process.env.MONGO_URI, { 
+      dbName: "adoptionAgencyDb",
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
   if (connection) {
     console.log("Connected to DB");
     app.listen(PORT, () => {
